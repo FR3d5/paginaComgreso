@@ -35,7 +35,7 @@ function init() {
     controls.enableZoom = true;
     controls.enablePan = true;
 
-    const loader = new GLTFLoader();
+   /* const loader = new GLTFLoader();
     loader.load('./public/modelos/padresito.glb', function (gltf) {
         model = gltf.scene;
         scene.add(model);
@@ -66,7 +66,7 @@ function init() {
         camera.position.set(center.x+3, center.y + 8, center.z + 20);
         controls.target.copy(center);
         controls.update();
-    });
+    });*/
 
     window.addEventListener('resize', onWindowResize);
 }

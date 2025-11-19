@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Responsiva</title>
+    <link rel="stylesheet" href="estilosGaleria.css">
+</head>
+<body>
+    <div class="contenedor">
+
+        <div class="galeria">
+            <!-- Item 1 -->
+            <div class="item-galeria" onclick="abrirModal(0)">
+                <img src="IMAGENES/unnamed.png" alt="Montaña">
+            </div>
+
+            <!-- Item 2 -->
+            <div class="item-galeria" onclick="abrirModal(1)">
+                <img src="IMAGENES/unnamed (1).png" alt="Playa">
+            </div>
+
+            <!-- Item 3 -->
+            <div class="item-galeria" onclick="abrirModal(2)">
+                <img src="IMAGENES/unnamed (2).png" alt="Bosque">
+            </div>
+
+            <!-- Item 4 -->
+            <div class="item-galeria" onclick="abrirModal(3)">
+                <img src="IMAGENES/unnamed (3).png" alt="Ciudad">
+            </div>
+
+            <!-- Item 5 -->
+            <div class="item-galeria" onclick="abrirModal(4)">
+                <img src="IMAGENES/unnamed (4).png" alt="Naturaleza">
+            </div>
+
+            <!-- Item 6 -->
+            <div class="item-galeria" onclick="abrirModal(5)">
+                <img src="IMAGENES/unnamed (5).png" alt="Agua">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(6)">
+                <img src="IMAGENES/unnamed (6).png" alt="Ciudad Nocturna">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(7)">
+                <img src="IMAGENES/unnamed (7).png" alt="Desierto">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(8)">
+                <img src="IMAGENES/unnamed (8).png" alt="Cascada">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(9)">
+                <img src="IMAGENES/unnamed (9).png" alt="Campo">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(10)">
+                <img src="IMAGENES/unnamed (10).png" alt="Isla">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(11)">
+                <img src="IMAGENES/unnamed (11).png" alt="Glaciar">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(12)">
+                <img src="IMAGENES/unnamed (12).png" alt="Volcán">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(13)">
+                <img src="IMAGENES/unnamed (13).png" alt="Lago">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(14)">
+                <img src="IMAGENES/unnamed (14).png" alt="Selva">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(15)">
+                <img src="IMAGENES/unnamed (15).png" alt="Atardecer">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(16)">
+                <img src="IMAGENES/unnamed (16).png" alt="Aurora">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(17)">
+                <img src="IMAGENES/unnamed (17).png" alt="Montañas Nevadas">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(18)">
+                <img src="IMAGENES/unnamed (18).png" alt="Pradera">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(19)">
+                <img src="IMAGENES/unnamed (19).png" alt="Río">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(20)">
+                <img src="IMAGENES/unnamed (20).png" alt="Cañón">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(21)">
+                <img src="IMAGENES/unnamed (21).png" alt="Campo de Flores">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(22)">
+                <img src="IMAGENES/unnamed (22).png" alt="Bosque Otoñal">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(23)">
+                <img src="IMAGENES/unnamed (23).png" alt="Montaña al Amanecer">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(24)">
+                <img src="IMAGENES/unnamed (24).png" alt="Costa Rocosa">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(25)">
+                <img src="IMAGENES/unnamed (25).png" alt="Valle">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(26)">
+                <img src="IMAGENES/unnamed (26).png" alt="Montaña con Nubes">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(27)">
+                <img src="IMAGENES/unnamed (27).png" alt="Río entre Montañas">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(28)">
+                <img src="IMAGENES/unnamed (28).png" alt="Llanura">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(29)">
+                <img src="IMAGENES/unnamed (29).png" alt="Montaña Rocosa">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(30)">
+                <img src="IMAGENES/unnamed (30).png" alt="Cielo Estrellado">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(31)">
+                <img src="IMAGENES/unnamed (31).png" alt="Colinas Verdes">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(32)">
+                <img src="IMAGENES/unnamed (32).png" alt="Montaña al Atardecer">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(33)">
+                <img src="IMAGENES/unnamed (33).png" alt="Río Serpenteante">
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalGaleria" class="modal" onclick="cerrarModal(event)">
+        <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+        <div class="modal-contenido" onclick="event.stopPropagation()">
+            <img id="modalImagen" class="modal-imagen" src="" alt="Imagen ampliada">
+            <div class="modal-info">
+                <h2 id="modalTitulo" class="modal-titulo"></h2>
+                <p class="modal-fecha" id="modalFecha"></p>
+                <p id="modalDescripcion" class="modal-descripcion"></p>
+            </div>
+        </div>
+    </div>
+
+    <script url="scriptGaleria.js"></script>
+</body>
+</html>

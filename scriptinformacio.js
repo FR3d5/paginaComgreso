@@ -41,51 +41,6 @@ function init() {
     controls.enableZoom = true;
     controls.enablePan = true;
 
-    const loader = new FBXLoader();
-    loader.load(
-        './public/modelos/Dying.fbx',
-
-        function (object) {
-            model = object;
-            scene.add(model);
-
-            // 🕺 Animaciones
-            if (object.animations && object.animations.length > 0) {
-                mixer = new THREE.AnimationMixer(model);
-                const action = mixer.clipAction(object.animations[0]);
-                action.play();
-            }
-
-            // 🌑 Sombras
-            model.traverse(function (child) {
-                if (child.isMesh) {
-                    child.castShadow = true;
-                    child.receiveShadow = true;
-                }
-            });
-
-            model.rotation.y = 0.5;
-            model.scale.set(20,20,20);
-            if (window.innerWidth < 676) model.scale.set(30, 20, 30);
-
-            const box = new THREE.Box3().setFromObject(model);
-            const center = new THREE.Vector3();
-            box.getCenter(center);
-            camera.position.set(center.x + 3, center.y - 8, center.z + 30);
-            controls.target.copy(center);
-            controls.update();
-
-            console.log('✅ Modelo FBX cargado correctamente');
-        },
-
-        (xhr) => {
-            console.log((xhr.loaded / xhr.total * 100).toFixed(1) + '% cargado');
-        },
-
-        (error) => {
-            console.error('❌ Error al cargar el modelo FBX:', error);
-        }
-    );
 
     // 🎧 Eventos
     document.addEventListener('mousemove', onMouseMove);

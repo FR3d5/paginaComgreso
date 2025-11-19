@@ -1,67 +1,100 @@
 <!doctype html>
 <html>
 <head>
-  <title>PARROQUIA</title>
-  <link rel="stylesheet" media="all" href="styleinformacion.css" />
+  <title>CONGRESO NACIONAL DE INFORMÁTICA</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styleinformacion.css">
 </head>
 <body>
-  <h1>INFORMACION</h1>
-  <section class="mapa" id="ubicacion">
-  <h2>Nuestra Ubicación</h2>
-  <p>Encuéntranos en el mapa:</p><br>
-  <div class="mapa-contenedor">
-  <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d6366.152004154291!2d-66.58541359296181!3d-18.423018732820395!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x93fce076368fffff%3A0x64b6aa39e7ababab!2sNuestra%20Se%C3%B1ora%20de%20la%20Asunci%C3%B3n!5e0!3m2!1ses-419!2sbo!4v1751727455053!5m2!1ses-419!2sbo" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-  </div>
-  <p>Dirección: [HC7P+C5Q, Llallagua]</p>
-  </section>
-  
-  <div class="infor">
-    <h3>
-    <pre>
-SERVICIOS:
-- bautizos
-- matrimonios
+  <div class="container">
+    <div class="header">
+      <img src="public/img/unnamed.png" alt="">
+      <p>MAYORES REFERENCIAS E INFORMACIONES EN:</p>
+    </div>
 
-HORARIOS:
-- Horarios de misa comunal
-     DIAS             INICIO DE MISA
-     
-    LUNES              08:30 Am
-    JUEVES             08:30 Am
-    SÁBADO             08:30 Am
-    DOMINGO            08:30 Am y 19:30 Pm
-    
-- HORARIO DE ATENCION:
-   MAÑANA              TARDE
-          lunes a viernes
- 07:30 a 12:00      14:30 a 17:30
-            sabado
- 07:30 a 11:00
-            domingo
- 07:30 a 09:00
- 
-CONTACTO:  73812554
-  </pre>
-    </h3>
-    <a class="facebook" href="https://www.facebook.com/ParroquiaLlallagua/?locale=es_LA">FACEBOOK</a>
+    <div class="glass-card">
+      <div class="section-title">📍 Ubicación</div>
+      
+      <div class="info-group">
+        <span class="address-city">Llallagua, Bolivia</span>
+        <div class="address-item">
+          <div class="info-content">
+            Calle Oruro, Edificio de Ciencia y Tecnología<br>
+            Segundo piso - Oficinas 1, 2 y 3
+          </div>
+        </div>
+      </div>
+
+      <div class="info-group">
+        <span class="address-city">Catavi, Bolivia</span>
+        <div class="address-item">
+          <div class="info-content">
+            Campus Maria Barzola<br>
+            Edificio Informática - Bloque A<br>
+            Primer piso - Oficina N° 5
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="section-title">📞 Contacto</div>
+      
+      <div class="info-group">
+        <span class="info-label">Teléfono</span>
+        <div class="info-content">
+          <a href="tel:+59175418754" class="contact-link">(+591) 75418754</a>
+        </div>
+      </div>
+
+      <div class="info-group">
+        <span class="info-label">Email</span>
+        <div class="info-content">
+          <a href="mailto:iidai.informatica.unsxx@gmail.com" class="contact-link">
+            iidai.informatica.unsxx@gmail.com
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="section-title">🌐 Sitios Web</div>
+      
+      <div class="social-links">
+        <a href="https://iinformatica-unsxx.edu.bo/" target="_blank" class="social-link">
+          <span class="icon-circle"></span>
+          Sitio Principal
+        </a>
+        <a href="https://sites.google.com/view/iidai" target="_blank" class="social-link">
+          <span class="icon-circle"></span>
+          IIDAI
+        </a>
+        <a href="https://sites.google.com/view/congreso-nacional-informatica" target="_blank" class="social-link">
+          <span class="icon-circle"></span>
+          Congreso
+        </a>
+      </div>
+    </div>
+
+    <div class="glass-card">
+      <div class="section-title">📱 Redes Sociales</div>
+      
+      <div class="social-links">
+        <a href="https://www.facebook.com/inforunsxx/" target="_blank" class="social-link">
+          <span class="icon-circle"></span>
+          Facebook
+        </a>
+      </div>
+    </div>
   </div>
-  
-<button class="menu-toggle" id="openMenuBtn">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="#000" class="w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-        </svg>
-    </button>
-  <script type="module" src="scriptinformacio.js"></script>
+
   <script>
-    // Enviar eventos de scroll al padre (index.html)
     window.addEventListener('wheel', function(event) {
-        // Enviar información del scroll al documento padre
-        window.parent.postMessage({
-            type: 'iframe-scroll',
-            deltaY: event.deltaY
-        }, '*');
+      window.parent.postMessage({
+        type: 'iframe-scroll',
+        deltaY: event.deltaY
+      }, '*');
     });
-</script>
+  </script>
 </body>
 </html>
