@@ -33,6 +33,9 @@ const CAMERA_ROTATIONS = {
   'modal-modelo3d': { y: Math.PI / 2 },               
   'modal-contacto': { y: Math.PI*1.2 },
     'modal-convocatoria': { y: -Math.PI / 4 },
+    'modal-galeriaXIII': { y: -Math.PI },
+    'modal-expositoresXIII': { y: Math.PI / 2 }
+
 };
 
 function showModalMessage(message) {
@@ -456,13 +459,21 @@ function animate() {
     }
     
     if (targetRotation && camera) {
-        camera.rotation.y = lerpAngle(camera.rotation.y, targetRotation.y, CAMERA_SPEED);
-        
-        if (Math.abs(camera.rotation.y - targetRotation.y) < 0.01) {
-            camera.rotation.y = targetRotation.y;
-            targetRotation = null;
-        }
+    // Solo interpolar Y (mantener X y Z sin cambios)
+    camera.rotation.y = lerpAngle(camera.rotation.y, targetRotation.y, CAMERA_SPEED);
+    
+    // Bloquear X y Z en sus valores actuales
+    camera.rotation.x = 0;
+    camera.rotation.z = 0;
+    
+    // Detener cuando llegue al destino
+    if (Math.abs(camera.rotation.y - targetRotation.y) < 0.01) {
+        camera.rotation.y = targetRotation.y;
+        camera.rotation.x = 0;
+        camera.rotation.z = 0;
+        targetRotation = null;
     }
+}
 if (window.videoPlanes && window.videoPlanes.length > 0) {
     window.videoPlanes.forEach(item => {
         // Siempre actualizar la textura en cada frame
@@ -575,10 +586,25 @@ const iframeVentana = document.getElementById('iframeVentana');
 const btnInicio = document.getElementById('abrir-inicio');
 const btnGaleria = document.getElementById('abrir-galeria');
 const btnInformacion = document.getElementById('abrir-informacion');
+const btnContacto = document.getElementById('abrir-expositores');
 const btnModelo3D = document.getElementById('abrir-modelo3d');
 const btnConvocatoria = document.getElementById('abrir-convocatoria');
-    
 
+const btnGaleriaXIII = document.getElementById('abrir-galeriaXIII');
+const btnExpositoresXIII = document.getElementById('abrir-expositoresXIII');
+const btnConcursoXIII = document.getElementById('abrir-concursoXIII');
+const btnpresentacion1 = document.getElementById('abrir-presentacion1');
+const btnconvocatoria1 = document.getElementById('abrir-convocatoria1');
+const btninscripciones1 = document.getElementById('abrir-inscripciones1');
+const btnCronograma1 = document.getElementById('abrir-cronograma1');
+
+const btnGaleriaXIV = document.getElementById('abrir-galeriaXIV');
+const btnExpositoresXIV = document.getElementById('abrir-expositoresXIV');
+const btnConcursoXIV = document.getElementById('abrir-concursoXIV');
+const btnpresentacion2 = document.getElementById('abrir-presentacion2');
+const btnconvocatoria2 = document.getElementById('abrir-convocatoria2');
+const btninscripciones2 = document.getElementById('abrir-inscripciones2');
+const btnCronograma2 = document.getElementById('abrir-cronograma2');
 function abrirIframe(url, modalId) {
     if (controls && controls.isLocked) controls.unlock();
     currentModal = modalId;
@@ -615,17 +641,11 @@ function restaurarTitulos() {
     if (overlay) overlay.style.display = 'flex';
 }
 
+
 if (btnInicio) {
     btnInicio.addEventListener('click', (e) => {
         e.preventDefault();
-        if (controls && controls.isLocked) controls.unlock();
-        
-        restaurarTitulos();
-        
-        if (finalPosition) {
-            targetPosition = finalPosition.clone();
-            targetRotation = { y: -1.6 };
-        }
+        location.reload();
     });
 }
 
@@ -643,6 +663,12 @@ if (btnInformacion) {
     });
 }
 
+if (btnContacto) {
+    btnContacto.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('expositores.html', 'modal-expositores');
+    });
+}
 if (btnModelo3D) {
     btnModelo3D.addEventListener('click', (e) => {
         e.preventDefault();
@@ -655,7 +681,90 @@ if (btnConvocatoria) {
         abrirIframe('convocatoria.html', 'modal-convocatoria');
     });
 }
-
+if (btnGaleriaXIII) {
+    btnGaleriaXIII.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIIIcongreso/galeria.html', 'modal-galeriaXIII');
+    });
+}
+if (btnExpositoresXIII) {
+    btnExpositoresXIII.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIIIcongreso/expositores.html', 'modal-expositoresXIII');
+    });
+}
+if (btnConcursoXIII) {
+    btnConcursoXIII.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIIIcongreso/concurso.html', 'modal-concursoXIII');
+    });
+}
+if (btnpresentacion1) {
+    btnpresentacion1.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIIIcongreso/presentacion1.html', 'modal-presentacion1');
+    });
+}
+if (btnconvocatoria1) {
+    btnconvocatoria1.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIIIcongreso/convocatoria1.html', 'modal-convocatoria1');
+    });
+}
+if (btninscripciones1) {
+    btninscripciones1.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIIIcongreso/inscripciones.html', 'modal-inscripciones1');
+    });
+}
+if (btnCronograma1) {
+    btnCronograma1.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIIIcongreso/cronograma.html', 'modal-cronograma');
+    });
+}
+if (btnGaleriaXIV) {
+    btnGaleriaXIV.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIVcongreso/galeria.html', 'modal-galeriaXIV');
+    });
+}
+if (btnExpositoresXIV) {
+    btnExpositoresXIV.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIVcongreso/expositores.html', 'modal-expositoresXIV');
+    });
+}
+if (btnConcursoXIV) {
+    btnConcursoXIV.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIVcongreso/concurso.html', 'modal-concursoXIV');
+    });
+}
+if (btnpresentacion2) {
+    btnpresentacion2.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIVcongreso/presentacion2.html', 'modal-presentacion2');
+    });
+}
+if (btnconvocatoria2) {
+    btnconvocatoria2.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIVcongreso/convocatoria2.html', 'modal-convocatoria2');
+    });
+}
+if (btninscripciones2) {
+    btninscripciones2.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIVcongreso/inscripciones2.html', 'modal-inscripciones2');
+    });
+}
+if (btnCronograma2) {
+    btnCronograma2.addEventListener('click', (e) => {
+        e.preventDefault();
+        abrirIframe('./public/XIVcongreso/cronograma.html', 'modal-cronograma2');
+    });
+}
 function configurarScrollIframe() {
     window.addEventListener('message', function(event) {
         if (event.data && event.data.type === 'iframe-scroll') {

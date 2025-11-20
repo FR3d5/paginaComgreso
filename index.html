@@ -23,17 +23,17 @@
                         <!-- Opcion 1 -->
                         <div class="opcion">
                             <button class="btn-opcion" id="btnOpcion1">
-                                XIII Congreso Nacional de Informatica
+                                XIII Congreso
                                 <span class="chevron-small" id="chevron1">v</span>
                             </button>
                             <div class="submenu" id="submenu1">
-                                <a href="">Expositores</a>
-                                <a href="./public/XIIIcongreso/galeria.html">Galeria</a>
-                                <a href="#enlace1-3">concurso</a>
-                                <a href="#enlace1-4">Presentacion 1</a>
-                                <a href="#enlace1-5">Convocatoria 1</a>
-                                <a href="#enlace1-6">Inscripciones 1</a>
-                                <a href="#enlace1-7">Cronograma 2023</a>
+                                <a id="abrir-expositoresXIII" href="./public/XIIIcongreso/expositores.html">Expositores</a>
+                                <a id="abrir-galeriaXIII" href="./public/XIIIcongreso/galeria.html">Galeria</a>
+                                <a id="abrir-concursoXIII" href="./public/XIIIcongreso/concurso.html">concurso</a>
+                                <a id="abrir-presentacion1" href="./public/XIIIcongreso/presentacion1.html">Presentacion 2023</a>
+                                <a id="abrir-convocatoria1" href="./public/XIIIcongreso/convocatoria1.html">Convocatoria 2023</a>
+                                <a id="abrir-inscripciones1" href="./public/XIIIcongreso/inscripciones.html">Inscripciones 2023</a>
+                                <a id="abrir-cronograma1" href="./public/XIIIcongreso/cronograma.html">Cronograma 2023</a>
                             </div>
                         </div>
 
@@ -42,13 +42,17 @@
                         <!-- Opcion 2 -->
                         <div class="opcion">
                             <button class="btn-opcion" id="btnOpcion2">
-                                Opcion 2
+                                XIV Congreso
                                 <span class="chevron-small" id="chevron2">v</span>
                             </button>
                             <div class="submenu" id="submenu2">
-                                <a href="#enlace2-1">Enlace 2.1</a>
-                                <a href="#enlace2-2">Enlace 2.2</a>
-                                <a href="#enlace2-3">Enlace 2.3</a>
+                                <a id="abrir-expositoresXIV" href="./public/XIVcongreso/expositores.html">Expositores 2024</a>
+                        <!--    <a id="abrir-galeriaXIV" href="./public/XIVcongreso/galeria.html">Galeria</a>   -->
+                                <a id="abrir-concursoXIV" href="./public/XIVcongreso/concurso.html">concurso 2024</a>
+                                <a id="abrir-presentacion2" href="./public/XIVcongreso/presentacion2.html">Informacion 2024</a>
+                                <a id="abrir-convocatoria2" href="./public/XIVcongreso/convocatoria2.html">Convocatoria 2024</a>
+                                <a id="abrir-inscripciones2" href="./public/XIVcongreso/inscripciones2.html">Inscripciones 2024</a>
+                                <a id="abrir-cronograma2" href="./public/XIVcongreso/cronograma.html">Cronograma 2024</a>
                             </div>
                         </div>
                     </div>
@@ -116,7 +120,12 @@ Edificio Ingeniería Informática Bloque A <br>
         <div id="text"><a id="abrir-informacion"><span class="spot"></span>Informaciónes</a></div>
       </svg>
     </div>
-
+    <div class="svg-wrapper">
+      <svg height="40" width="150">
+        <rect id="shape" height="40" width="150" />
+        <div id="text"><a id="abrir-expositores"><span class="spot"></span>Expositores</a></div>
+      </svg>
+    </div>
     <div class="svg-wrapper">
       <svg height="40" width="150">
         <rect id="shape" height="40" width="150" />
@@ -145,6 +154,6 @@ Edificio Ingeniería Informática Bloque A <br>
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
 <button type="button" class="boton-luz">Modos luz</button>
 <script type="module" src="scriptinterior.js"></script>
-
+<footer style="color: white; text-align: left; padding: 10px; position: absolute; z-index: 200; transform: translateY(1650%);">desarrollador: Freds Cazorla Juyari</footer>
 </body>
 </html>

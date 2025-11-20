@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galería Responsiva</title>
+    <link rel="stylesheet" href="estilosexpositores.css">
+</head>
+<body>
+    <h1>EXPOSITORES "XIV CONGRESO NACIONAL DE INFORMATICA"</h1>
+    <div class="contenedor">
+
+        <div class="galeria">
+            <div class="item-galeria" onclick="abrirModal(0)">
+                <img src="IMAGENES2024/expositor.png" alt="Montaña">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(1)">
+                <img src="IMAGENES2024/expositor1.png" alt="Playa">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(2)">
+                <img src="IMAGENES2024/expositor2.png" alt="Bosque">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(3)">
+                <img src="IMAGENES2024/expositor3.png" alt="Ciudad">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(4)">
+                <img src="IMAGENES2024/expositor4.png" alt="Naturaleza">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(5)">
+                <img src="IMAGENES2024/expositor5.png" alt="Agua">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(6)">
+                <img src="IMAGENES2024/expositor6.png" alt="Ciudad Nocturna">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(7)">
+                <img src="IMAGENES2024/expositor7.png" alt="Desierto">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(8)">
+                <img src="IMAGENES2024/expositor8.png" alt="Cascada">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(9)">
+                <img src="IMAGENES2024/expositor9.png" alt="Campo">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(10)">
+                <img src="IMAGENES2024/expositor10.png" alt="Isla">
+            </div>
+            <div class="item-galeria" onclick="abrirModal(11)">
+                <img src="IMAGENES2024/expositor11.png" alt="Glaciar">
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modalGaleria" class="modal" onclick="cerrarModal(event)">
+        <span class="cerrar-modal" onclick="cerrarModal()">&times;</span>
+        <div class="modal-contenido" onclick="event.stopPropagation()">
+            <img id="modalImagen" class="modal-imagen" src="" alt="Imagen ampliada">
+            <div class="modal-info">
+                <h2 id="modalTitulo" class="modal-titulo"></h2>
+                <p class="modal-fecha" id="modalFecha"></p>
+                <p id="modalDescripcion" class="modal-descripcion"></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="expositores.js"></script>
+</body>
+</html>
