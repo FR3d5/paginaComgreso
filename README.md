@@ -1,1 +1,1 @@
-# iglesia-cinco
+desarrollador del sistema estatico del congreso univ: Freds Cazorla Juyari con el repositorio https://github.com/FR3d5/paginaComgreso
