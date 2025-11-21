@@ -605,6 +605,7 @@ const btnpresentacion2 = document.getElementById('abrir-presentacion2');
 const btnconvocatoria2 = document.getElementById('abrir-convocatoria2');
 const btninscripciones2 = document.getElementById('abrir-inscripciones2');
 const btnCronograma2 = document.getElementById('abrir-cronograma2');
+
 function abrirIframe(url, modalId) {
     if (controls && controls.isLocked) controls.unlock();
     currentModal = modalId;
@@ -624,23 +625,47 @@ function abrirIframe(url, modalId) {
     configurarScrollIframe();
 }
 function ocultarObjetos(){
-if (overlay) overlay.style.display = 'none';
+    if (overlay) overlay.style.display = 'none';
+    
+    // Usar setTimeout para asegurar que el DOM esté listo
     setTimeout(() => {
         const h1 = document.querySelector('.contenidoinfo');
         const h2 = document.querySelector('.posicion1');
-        if (h1) h1.classList.add('posicion-final-h1');
-        if (h2) h2.classList.add('posicion-final-h2');
-    }, 100);
+        
+        // DEBUG: Ver si se encuentran los elementos
+        console.log('h1 encontrado:', !!h1, 'h2 encontrado:', !!h2);
+        
+        if (h1) {
+            h1.classList.add('posicion-final-h1');
+            // Alternativa: también establecer display para asegurar ocultamiento
+            h1.style.display = 'none';
+        }
+        if (h2) {
+            h2.classList.add('posicion-final-h2');
+            h2.style.display = 'none';
+        }
+    }, 50); // Reducir el timeout a 50ms
 }
+
+// ✅ REEMPLAZA restaurarTitulos() con esta versión mejorada
 
 function restaurarTitulos() {
     const h1 = document.querySelector('.contenidoinfo');
     const h2 = document.querySelector('.posicion1');
-    if (h1) h1.classList.remove('posicion-final-h1');
-    if (h2) h2.classList.remove('posicion-final-h2');
+    
+    // DEBUG: Ver si se encuentran los elementos
+    console.log('Restaurando - h1 encontrado:', !!h1, 'h2 encontrado:', !!h2);
+    
+    if (h1) {
+        h1.classList.remove('posicion-final-h1');
+        h1.style.display = ''; // Restaurar display original
+    }
+    if (h2) {
+        h2.classList.remove('posicion-final-h2');
+        h2.style.display = ''; // Restaurar display original
+    }
     if (overlay) overlay.style.display = 'flex';
 }
-
 
 if (btnInicio) {
     btnInicio.addEventListener('click', (e) => {
@@ -806,6 +831,28 @@ const toggle = document.querySelector('.menu-toggle');
 toggle.addEventListener('click', () => {
     menu.classList.toggle('workarea-open');
 });
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('#workarea') && !e.target.closest('.menu-toggle')) {
+    menu.classList.remove('workarea-open');
+  }
+});
+const linksWorkarea = document.querySelectorAll('#workarea a, #workarea button');
+
+linksWorkarea.forEach(link => {
+  link.addEventListener('click', () => {
+    // Cerrar el menú después de hacer clic
+    menu.classList.remove('workarea-open');
+  });
+});
+
+// Si usas la función abrirIframe() del script anterior, agrégale esto:
+const originalAbrirIframe = window.abrirIframe;
+window.abrirIframe = function(url, modalId) {
+  // Cerrar menú
+  menu.classList.remove('workarea-open');
+  // Llamar función original
+  return originalAbrirIframe.call(this, url, modalId);
+};
 let modoLuz = 0;
     const botonLuz = document.querySelector('.boton-luz');
 
