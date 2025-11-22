@@ -214,7 +214,10 @@ function loadMainScene() {
             queueModel(loadFlowers9, finalPosition.clone().add(new THREE.Vector3(-300, 19, -105)));
             queueModel(loadFlowers9, finalPosition.clone().add(new THREE.Vector3(-300, 19, 105)));
             queueModel(loadFlowers10, finalPosition.clone().add(new THREE.Vector3(-285, -19, -90)));
-
+            if (!CONFIG.isMobile) {
+    queueModel(loadFlowers9, finalPosition.clone().add(new THREE.Vector3(-300, 19, -105)));
+    queueModel(loadFlowers9, finalPosition.clone().add(new THREE.Vector3(-300, 19, 105)));
+}
             processModelQueue();
         },
         function (progress) {
