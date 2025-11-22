@@ -2,7 +2,6 @@ import * as THREE from 'https://esm.sh/three@0.161.0';
 import { GLTFLoader } from 'https://esm.sh/three@0.161.0/examples/jsm/loaders/GLTFLoader.js';
 import { PointerLockControls } from 'https://esm.sh/three@0.161.0/examples/jsm/controls/PointerLockControls.js';
 
-// ✅ CONFIGURACIÓN GLOBAL OPTIMIZADA
 const CONFIG = {
     isMobile: /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(navigator.userAgent),
     maxLights: 2,
@@ -25,10 +24,17 @@ let ambientLight;
 let currentModal = null;
 const overlay = document.getElementById('overlay');
 
-// ✅ COLAS Y GESTIÓN DE MODELOS
 let modelQueue = [];
 let isLoadingModel = false;
 let loadedModels = [];
+
+// ✅ ESTADO GLOBAL DEL VIDEO
+let globalVideoState = {
+    video: null,
+    isPlaying: false,
+    planes: [],
+    textures: []
+};
 
 const CAMERA_MODAL_VIEW_OFFSET = new THREE.Vector3(50, 0, 30);
 const CAMERA_SPEED = 0.05;
@@ -50,7 +56,6 @@ const CAMERA_ROTATIONS = {
     'modal-expositoresXIII': { y: Math.PI / 2 }
 };
 
-// ✅ MODAL PERSONALIZADO
 function showModalMessage(message) {
     const modal = document.createElement('div');
     modal.className = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white p-6 rounded-xl shadow-2xl z-50 max-w-sm text-center border-4 border-blue-500';
@@ -64,11 +69,9 @@ function showModalMessage(message) {
 }
 window.alert = showModalMessage;
 
-// ✅ INICIALIZACIÓN
 init();
 animate();
 
-// ✅ FUNCIÓN INIT OPTIMIZADA
 function init() {
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0x333333);
@@ -105,7 +108,6 @@ function init() {
         restaurarTitulos();
     });
 
-    // ✅ ILUMINACIÓN OPTIMIZADA
     ambientLight = new THREE.AmbientLight(0xffffff, isMobile ? 1.5 : 2);
     scene.add(ambientLight);
 
@@ -128,24 +130,20 @@ function init() {
     clock = new THREE.Clock();
     window.addEventListener("resize", onWindowResize, false);
 
-    // ✅ DESHABILITAR SOMBRAS EN MOBILE
     renderer.shadowMap.enabled = CONFIG.isMobile ? false : true;
     if (!CONFIG.isMobile) {
         renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     }
 
-    // ✅ MONITOREO DE CONEXIÓN
     configurarMonitorConexion();
 
     console.log(`🚀 App iniciada - Mobile: ${isMobile}`);
 }
 
-// ✅ FUNCIÓN PARA AGREGAR MODELOS A COLA
 function queueModel(loadFn, position) {
     modelQueue.push({ loadFn, position });
 }
 
-// ✅ PROCESAR COLA DE MODELOS SECUENCIALMENTE
 async function processModelQueue() {
     if (isLoadingModel || modelQueue.length === 0) return;
 
@@ -160,7 +158,6 @@ async function processModelQueue() {
             setTimeout(resolve, CONFIG.modelLoadDelay);
         });
 
-        // Liberar memoria cada 3 modelos
         if (i % 3 === 0 && i !== 0) {
             console.log('🧹 Limpiando memoria...');
             if (window.gc) window.gc();
@@ -172,7 +169,6 @@ async function processModelQueue() {
     console.log('✅ Todos los modelos cargados');
 }
 
-// ✅ CARGAR ESCENA PRINCIPAL
 function loadMainScene() {
     const loader = new GLTFLoader();
 
@@ -201,7 +197,6 @@ function loadMainScene() {
             camera.rotation.y = 1.6;
             controls.getObject().position.copy(camera.position);
 
-            // ✅ AGREGAR MODELOS A COLA
             queueModel(loadFlowers, finalPosition.clone().add(new THREE.Vector3(-280, -5, 110)));
             queueModel(loadFlowers2, finalPosition.clone().add(new THREE.Vector3(-315, -19, 183)));
             queueModel(loadFlowers3, finalPosition.clone().add(new THREE.Vector3(-315, -19, -183)));
@@ -212,7 +207,6 @@ function loadMainScene() {
             queueModel(loadFlowers6, finalPosition.clone().add(new THREE.Vector3(-300, -43, 150)));
             queueModel(loadFlowers6, finalPosition.clone().add(new THREE.Vector3(-300, -43, -150)));
 
-            // Sillas en lote
             [78, 65, 52, 39, 27, 15, 3, -9, -21, -33, -45, -57, -69].forEach(z => {
                 queueModel(loadFlowers8, finalPosition.clone().add(new THREE.Vector3(-313, -19, z)));
             });
@@ -221,7 +215,6 @@ function loadMainScene() {
             queueModel(loadFlowers9, finalPosition.clone().add(new THREE.Vector3(-300, 19, 105)));
             queueModel(loadFlowers10, finalPosition.clone().add(new THREE.Vector3(-285, -19, -90)));
 
-            // ✅ PROCESAR COLA
             processModelQueue();
         },
         function (progress) {
@@ -235,165 +228,116 @@ function loadMainScene() {
     );
 }
 
-// ✅ FUNCIONES DE CARGA DE MODELOS OPTIMIZADAS
 function loadFlowers(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/bandera/public/banderas.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(30, 50, 30);
-            model.rotation.y = Math.PI / 2;
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando banderas:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/bandera/public/banderas.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(30, 50, 30);
+        model.rotation.y = Math.PI / 2;
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando banderas:', error); });
 }
 
 function loadFlowers2(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/parlante/public/parlante.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(30, 30, 30);
-            model.rotation.y = Math.PI;
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando parlante:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/parlante/public/parlante.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(30, 30, 30);
+        model.rotation.y = Math.PI;
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando parlante:', error); });
 }
 
 function loadFlowers3(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/parlante/public/parlante.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(30, 30, 30);
-            model.rotation.y = -Math.PI / 12;
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando parlante:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/parlante/public/parlante.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(30, 30, 30);
+        model.rotation.y = -Math.PI / 12;
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando parlante:', error); });
 }
 
 function loadFlowers4(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/parlante/public/parlante.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(20, 40, 20);
-            model.rotation.y = Math.PI;
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando parlante:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/parlante/public/parlante.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(20, 40, 20);
+        model.rotation.y = Math.PI;
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando parlante:', error); });
 }
 
 function loadFlowers5(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/parlan/public/mesa.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(20, 20, 20);
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando mesa:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/parlan/public/mesa.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(20, 20, 20);
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando mesa:', error); });
 }
 
 function loadFlowers6(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/parlan/public/mesa.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(20, 20, 20);
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando mesa:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/parlan/public/mesa.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(20, 20, 20);
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando mesa:', error); });
 }
 
 function loadFlowers7(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/parlante/public/parlante.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(20, 40, 20);
-            model.rotation.y = Math.PI;
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando parlante:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/parlante/public/parlante.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(20, 40, 20);
+        model.rotation.y = Math.PI;
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando parlante:', error); });
 }
 
 function loadFlowers8(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/silla/public/sillaMesa.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(25, 25, 25);
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando silla:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/silla/public/sillaMesa.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(25, 25, 25);
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando silla:', error); });
 }
 
+// ✅ FUNCIÓN CORREGIDA - Un solo video para múltiples planos
 function loadFlowers9(position) {
+    // Si ya existe video global, reutilizar
+    if (globalVideoState.video) {
+        console.log('📹 Reutilizando video existente en nueva posición');
+        crearPlanoVideo(position, globalVideoState.video);
+        return;
+    }
+
     const video = document.createElement('video');
-    video.id = 'videoElement_' + Math.random();
+    video.id = 'videoElement_' + Date.now();
     video.style.display = 'none';
-    video.autoplay = true;
+    video.autoplay = false;
     video.loop = true;
-    video.muted = true;
+    video.muted = false;
     video.crossOrigin = 'anonymous';
-    video.preload = 'auto';
+    video.preload = 'metadata';
     video.playsinline = true;
     video.volume = 0.05;
 
@@ -404,97 +348,118 @@ function loadFlowers9(position) {
 
     document.body.appendChild(video);
 
+    let videoTextureCreated = false;
+
     video.addEventListener('loadedmetadata', () => {
-        console.log('✅ Video cargado');
+        if (videoTextureCreated) return;
+        videoTextureCreated = true;
 
-        const videoTexture = new THREE.VideoTexture(video);
-        videoTexture.minFilter = THREE.LinearFilter;
-        videoTexture.magFilter = THREE.LinearFilter;
+        console.log('✅ Video cargado:', video.duration, 'segundos');
 
-        const geometry = new THREE.PlaneGeometry(16, 9);
-        const material = new THREE.MeshBasicMaterial({
-            map: videoTexture,
-            side: THREE.DoubleSide,
-            toneMapped: false
-        });
+        // Guardar el video global
+        globalVideoState.video = video;
 
-        const plane = new THREE.Mesh(geometry, material);
-        plane.rotation.y = Math.PI / 2;
-        plane.scale.set(5, 5, 5);
-        plane.position.copy(position);
-        plane.castShadow = false;
-        plane.receiveShadow = false;
+        // Crear primer plano
+        crearPlanoVideo(position, video);
 
-        scene.add(plane);
-        loadedModels.push(plane);
+        // Intentar reproducir
+        actualizarEstadoGlobal(globalVideoState.isPlaying);
+    });
 
-        if (!window.videoPlanes) {
-            window.videoPlanes = [];
-        }
-        window.videoPlanes.push({ video, texture: videoTexture, material });
-
-        video.play().catch(err => console.error('Error reproduciendo video:', err));
+    video.addEventListener('ended', () => {
+        console.log('🔄 Video terminó, reiniciando...');
+        video.currentTime = 0;
+        video.play().catch(e => console.warn('No se pudo reiniciar:', e));
     });
 
     video.addEventListener('error', (e) => {
         console.error('❌ Error cargando video:', e);
     });
+
+    video.addEventListener('play', () => {
+        console.log('▶️ Video iniciado globalmente');
+        globalVideoState.isPlaying = true;
+    });
+
+    video.addEventListener('pause', () => {
+        console.log('⏸️ Video pausado globalmente');
+        globalVideoState.isPlaying = false;
+    });
+}
+
+// ✅ FUNCIÓN AUXILIAR - Crear plano para el video
+function crearPlanoVideo(position, video) {
+    const videoTexture = new THREE.VideoTexture(video);
+    videoTexture.minFilter = THREE.LinearFilter;
+    videoTexture.magFilter = THREE.LinearFilter;
+    videoTexture.needsUpdate = true;
+
+    const geometry = new THREE.PlaneGeometry(16, 9);
+    const material = new THREE.MeshBasicMaterial({
+        map: videoTexture,
+        side: THREE.DoubleSide,
+        toneMapped: false
+    });
+
+    const plane = new THREE.Mesh(geometry, material);
+    plane.rotation.y = Math.PI / 2;
+    plane.scale.set(5, 5, 5);
+    plane.position.copy(position);
+    plane.castShadow = false;
+    plane.receiveShadow = false;
+
+    scene.add(plane);
+    loadedModels.push(plane);
+
+    // Guardar en estado global
+    globalVideoState.planes.push(plane);
+    globalVideoState.textures.push(videoTexture);
+
+    console.log('📺 Plano agregado. Total planos:', globalVideoState.planes.length);
+}
+
+// ✅ ACTUALIZAR ESTADO GLOBAL
+function actualizarEstadoGlobal(shouldPlay) {
+    if (!globalVideoState.video) return;
+
+    if (shouldPlay && globalVideoState.video.paused) {
+        globalVideoState.video.play().catch(e => console.error('Error:', e));
+        globalVideoState.isPlaying = true;
+    } else if (!shouldPlay && !globalVideoState.video.paused) {
+        globalVideoState.video.pause();
+        globalVideoState.isPlaying = false;
+    }
 }
 
 function loadFlowers10(position) {
     const loader = new GLTFLoader();
-    loader.load(
-        "https://fr3d5.github.io/atril/public/atrilVidrio.glb",
-        function (gltf) {
-            const model = gltf.scene;
-            model.scale.set(6, 6, 6);
-            model.position.copy(position);
-            scene.add(model);
-            loadedModels.push(model);
-        },
-        undefined,
-        function (error) {
-            console.error('Error cargando atril:', error);
-        }
-    );
+    loader.load("https://fr3d5.github.io/atril/public/atrilVidrio.glb", function (gltf) {
+        const model = gltf.scene;
+        model.scale.set(6, 6, 6);
+        model.position.copy(position);
+        scene.add(model);
+        loadedModels.push(model);
+    }, undefined, function (error) { console.error('Error cargando atril:', error); });
 }
 
-// ✅ CONTROLES DE TECLADO
 function onKeyDown(event) {
     switch (event.code) {
-        case "KeyW":
-            moveForward = true;
-            break;
-        case "KeyA":
-            moveLeft = true;
-            break;
-        case "KeyS":
-            moveBackward = true;
-            break;
-        case "KeyD":
-            moveRight = true;
-            break;
+        case "KeyW": moveForward = true; break;
+        case "KeyA": moveLeft = true; break;
+        case "KeyS": moveBackward = true; break;
+        case "KeyD": moveRight = true; break;
     }
 }
 
 function onKeyUp(event) {
     switch (event.code) {
-        case "KeyW":
-            moveForward = false;
-            break;
-        case "KeyA":
-            moveLeft = false;
-            break;
-        case "KeyS":
-            moveBackward = false;
-            break;
-        case "KeyD":
-            moveRight = false;
-            break;
+        case "KeyW": moveForward = false; break;
+        case "KeyA": moveLeft = false; break;
+        case "KeyS": moveBackward = false; break;
+        case "KeyD": moveRight = false; break;
     }
 }
 
-// ✅ INTERPOLACIÓN DE ÁNGULOS
 function lerpAngle(start, end, t) {
     let diff = end - start;
     while (diff > Math.PI) diff -= 2 * Math.PI;
@@ -502,7 +467,7 @@ function lerpAngle(start, end, t) {
     return start + diff * t;
 }
 
-// ✅ LOOP DE ANIMACIÓN OPTIMIZADO
+// ✅ LOOP DE ANIMACIÓN - Actualizar todas las texturas
 function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
@@ -535,30 +500,22 @@ function animate() {
         }
     }
 
-    // ✅ ACTUALIZAR VIDEOS
-    if (window.videoPlanes && window.videoPlanes.length > 0) {
-        window.videoPlanes.forEach(item => {
-            if (item.video && item.texture) {
-                item.texture.needsUpdate = true;
-
-                if (item.video.paused) {
-                    item.video.play().catch(e => console.error('Error:', e));
-                }
-            }
+    // ✅ ACTUALIZAR TODOS LOS VIDEOS/TEXTURAS
+    if (globalVideoState.video && globalVideoState.textures.length > 0) {
+        globalVideoState.textures.forEach(texture => {
+            texture.needsUpdate = true;
         });
     }
 
     renderer.render(scene, camera);
 }
 
-// ✅ RESIZE HANDLER
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-// ✅ CONTROLES MÓVILES
 function crearControlesMoviles() {
     const pad = document.createElement("div");
     pad.className = "controles-moviles";
@@ -584,7 +541,6 @@ function crearControlesMoviles() {
     document.getElementById("btn-right").addEventListener("touchend", () => (moveRight = false));
 }
 
-// ✅ MODALES Y IFRAMES
 const iframeModal = document.getElementById('modal-paginas');
 const iframeVentana = document.getElementById('iframeVentana');
 
@@ -611,7 +567,6 @@ const btnconvocatoria2 = document.getElementById('abrir-convocatoria2');
 const btninscripciones2 = document.getElementById('abrir-inscripciones2');
 const btnCronograma2 = document.getElementById('abrir-cronograma2');
 
-// ✅ ABRIR IFRAME CON CSS INYECTADO
 function abrirIframe(url, modalId) {
     console.log('Abriendo iframe:', url);
 
@@ -631,41 +586,9 @@ function abrirIframe(url, modalId) {
     iframeModal.style.display = 'flex';
     ocultarObjetos();
 
-    // ✅ INYECTAR CSS EN IFRAME
-    iframeVentana.onload = function () {
-        try {
-            const iframeDoc = iframeVentana.contentDocument || iframeVentana.contentWindow.document;
-
-            if (iframeDoc) {
-                const link = iframeDoc.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = '../style.css';
-                link.onerror = function () {
-                    const link2 = iframeDoc.createElement('link');
-                    link2.rel = 'stylesheet';
-                    link2.href = '../../style.css';
-                    iframeDoc.head.appendChild(link2);
-                };
-                iframeDoc.head.appendChild(link);
-
-                // Arreglar rutas de imágenes
-                const images = iframeDoc.querySelectorAll('img');
-                images.forEach(img => {
-                    const src = img.getAttribute('src');
-                    if (src && !src.startsWith('http') && !src.startsWith('/')) {
-                        img.src = '../../' + src;
-                    }
-                });
-            }
-        } catch (e) {
-            console.error('Error inyectando CSS:', e);
-        }
-    };
-
     configurarScrollIframe();
 }
 
-// ✅ OCULTAR OBJETOS
 function ocultarObjetos() {
     if (overlay) overlay.style.display = 'none';
 
@@ -686,7 +609,6 @@ function ocultarObjetos() {
     }, 50);
 }
 
-// ✅ RESTAURAR TÍTULOS
 function restaurarTitulos() {
     const h1 = document.querySelector('.contenidoinfo');
     const h2 = document.querySelector('.posicion1');
@@ -704,7 +626,6 @@ function restaurarTitulos() {
     if (overlay) overlay.style.display = 'flex';
 }
 
-// ✅ CERRAR MODAL CON LIMPIEZA DE MEMORIA
 function cerrarModalConRotacion() {
     restaurarTitulos();
 
@@ -712,29 +633,16 @@ function cerrarModalConRotacion() {
         iframeModal.style.display = 'none';
         iframeVentana.src = '';
 
-        // 🧹 LIMPIAR MEMORIA
-        if (window.videoPlanes) {
-            window.videoPlanes.forEach(item => {
-                if (item.video) {
-                    item.video.pause();
-                    item.video.currentTime = 0;
-                    item.video.src = '';
-                }
-                if (item.texture) {
-                    item.texture.dispose();
-                }
-                if (item.material) {
-                    item.material.dispose();
-                }
-            });
-            window.videoPlanes = [];
+        if (globalVideoState.video) {
+            globalVideoState.video.pause();
+            globalVideoState.isPlaying = false;
         }
 
-        const oldVideos = document.querySelectorAll('video');
+        const oldVideos = document.querySelectorAll('video:not([id])');
         oldVideos.forEach(v => v.remove());
 
         currentModal = null;
-        console.log('🧹 Memoria limpiada');
+        console.log('✅ Modal cerrado');
     }, 300);
 
     if (finalPosition) {
@@ -743,13 +651,12 @@ function cerrarModalConRotacion() {
     }
 }
 
-// ✅ EVENT LISTENERS DE BOTONES
 if (btnInicio) btnInicio.addEventListener('click', (e) => { e.preventDefault(); location.reload(); });
-if (btnGaleria) btnGaleria.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('inscripciones.html', 'modal-galeria'); });
-if (btnInformacion) btnInformacion.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('informacion.html', 'modal-informacion'); });
-if (btnContacto) btnContacto.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('expositores.html', 'modal-expositores'); });
-if (btnModelo3D) btnModelo3D.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('interior.html', 'modal-modelo3d'); });
-if (btnConvocatoria) btnConvocatoria.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('convocatoria.html', 'modal-convocatoria'); });
+if (btnGaleria) btnGaleria.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./inscripciones.html', 'modal-galeria'); });
+if (btnInformacion) btnInformacion.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./informacion.html', 'modal-informacion'); });
+if (btnContacto) btnContacto.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./expositores.html', 'modal-expositores'); });
+if (btnModelo3D) btnModelo3D.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./interior.html', 'modal-modelo3d'); });
+if (btnConvocatoria) btnConvocatoria.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./convocatoria.html', 'modal-convocatoria'); });
 
 if (btnGaleriaXIII) btnGaleriaXIII.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./public/XIIIcongreso/galeria.html', 'modal-galeriaXIII'); });
 if (btnExpositoresXIII) btnExpositoresXIII.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./public/XIIIcongreso/expositores.html', 'modal-expositoresXIII'); });
@@ -767,7 +674,6 @@ if (btnconvocatoria2) btnconvocatoria2.addEventListener('click', (e) => { e.prev
 if (btninscripciones2) btninscripciones2.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./public/XIVcongreso/inscripciones2.html', 'modal-inscripciones2'); });
 if (btnCronograma2) btnCronograma2.addEventListener('click', (e) => { e.preventDefault(); abrirIframe('./public/XIVcongreso/cronograma.html', 'modal-cronograma2'); });
 
-// ✅ CONFIGURAR SCROLL EN IFRAME
 function configurarScrollIframe() {
     window.addEventListener('message', function (event) {
         if (event.data && event.data.type === 'iframe-scroll') {
@@ -783,7 +689,6 @@ function configurarScrollIframe() {
     });
 }
 
-// ✅ CERRAR MODAL
 iframeModal.querySelector('.cerrar-modal').addEventListener('click', cerrarModalConRotacion);
 
 window.addEventListener('click', (e) => {
@@ -792,7 +697,6 @@ window.addEventListener('click', (e) => {
     }
 });
 
-// ✅ MENÚ DESPLEGABLE
 const menu = document.querySelector('#workarea');
 const toggle = document.querySelector('.menu-toggle');
 
@@ -815,14 +719,6 @@ linksWorkarea.forEach(link => {
     });
 });
 
-// Interceptar abrirIframe para cerrar menú
-const originalAbrirIframe = window.abrirIframe;
-window.abrirIframe = function (url, modalId) {
-    menu.classList.remove('workarea-open');
-    return originalAbrirIframe.call(this, url, modalId);
-};
-
-// ✅ BOTÓN LUZ
 let modoLuz = 0;
 const botonLuz = document.querySelector('.boton-luz');
 
@@ -843,7 +739,6 @@ if (botonLuz) {
     });
 }
 
-// ✅ MENÚ CONTACTO DESPLEGABLE
 const btnMas = document.getElementById('abrir-modal-contacto');
 const menuDesplegable = document.getElementById('menuDesplegable');
 const modalContacto = document.getElementById('modal-contacto');
@@ -906,27 +801,6 @@ document.querySelectorAll('.submenu a').forEach(link => {
     });
 });
 
-// ✅ CERRAR MODAL CONTACTO
-function cerrarModal(modal) {
-    if (modal) {
-        modal.style.display = 'none';
-    }
-}
-
-const cerrarModalBtn = document.querySelector('.cerrar-modal');
-if (cerrarModalBtn && modalContacto) {
-    cerrarModalBtn.addEventListener('click', function () {
-        modalContacto.classList.remove('active');
-    });
-}
-
-window.addEventListener('click', function (e) {
-    if (e.target === modalContacto) {
-        modalContacto.classList.remove('active');
-    }
-});
-
-// ✅ CONTROLES DE VIDEO
 let videoControlsVisible = false;
 
 function crearControlesVideo() {
@@ -947,16 +821,16 @@ function crearControlesVideo() {
             </div>
             
             <div class="video-botones">
-                <button id="btn-play-pause" class="btn-video" title="Play/Pause (Espacio)">▶️</button>
+                <button id="btn-play-pause" class="btn-video" title="Play/Pause">▶️</button>
                 <button id="btn-stop" class="btn-video" title="Detener">⏹️</button>
-                <button id="btn-retroceso" class="btn-video" title="Retroceso 5s (←)">⏪</button>
-                <button id="btn-avance" class="btn-video" title="Avance 5s (→)">⏩</button>
+                <button id="btn-retroceso" class="btn-video" title="Retroceso 5s">⏪</button>
+                <button id="btn-avance" class="btn-video" title="Avance 5s">⏩</button>
                 <div class="separador-controles"></div>
-                <button id="btn-volumen" class="btn-video" title="Silenciar/Activar">🔊</button>
+                <button id="btn-volumen" class="btn-video" title="Volumen">🔊</button>
                 <input id="slider-volumen" type="range" min="0" max="100" value="5" class="slider-volumen">
                 <div class="separador-controles"></div>
-                <button id="btn-pantalla-completa" class="btn-video" title="Pantalla Completa (F)">⛶</button>
-                <button id="btn-cerrar-controles" class="btn-video" title="Cerrar (ESC)">✕</button>
+                <button id="btn-pantalla-completa" class="btn-video" title="Pantalla Completa">⛶</button>
+                <button id="btn-cerrar-controles" class="btn-video" title="Cerrar">✕</button>
             </div>
             
             <div class="video-velocidad">
@@ -975,6 +849,7 @@ function crearControlesVideo() {
     inicializarControlesVideo();
 }
 
+// ✅ CONTROLES DE VIDEO MODIFICADOS - Con booleano isPlaying
 function inicializarControlesVideo() {
     const btnPlayPause = document.getElementById('btn-play-pause');
     const btnStop = document.getElementById('btn-stop');
@@ -987,120 +862,117 @@ function inicializarControlesVideo() {
     const selectVelocidad = document.getElementById('select-velocidad');
     const progressBar = document.getElementById('video-progress-bar');
 
+    // ✅ PLAY/PAUSE - Usa booleano
     btnPlayPause.addEventListener('click', () => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            if (video.paused) {
-                video.play();
-                btnPlayPause.textContent = '⏸️';
-            } else {
-                video.pause();
-                btnPlayPause.textContent = '▶️';
-            }
-        }
+        if (!globalVideoState.video) return;
+
+        const nuevoEstado = !globalVideoState.isPlaying;
+        actualizarEstadoGlobal(nuevoEstado);
+        btnPlayPause.textContent = nuevoEstado ? '⏸️' : '▶️';
+        console.log(nuevoEstado ? '▶️ Reproduciendo' : '⏸️ Pausado');
+        mostrarControlesVideo();
     });
 
+    // ✅ STOP
     btnStop.addEventListener('click', () => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            video.pause();
-            video.currentTime = 0;
-            btnPlayPause.textContent = '▶️';
-            actualizarBarraProgreso();
-        }
+        if (!globalVideoState.video) return;
+        globalVideoState.video.pause();
+        globalVideoState.video.currentTime = 0;
+        globalVideoState.isPlaying = false;
+        btnPlayPause.textContent = '▶️';
+        actualizarBarraProgreso();
+        console.log('⏹️ Detenido');
     });
 
+    // ✅ RETROCESO
     btnRetroceso.addEventListener('click', () => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            video.currentTime = Math.max(0, video.currentTime - 5);
-        }
+        if (!globalVideoState.video) return;
+        globalVideoState.video.currentTime = Math.max(0, globalVideoState.video.currentTime - 5);
+        console.log('⏪ Retroceso a:', globalVideoState.video.currentTime);
+        mostrarControlesVideo();
     });
 
+    // ✅ AVANCE
     btnAvance.addEventListener('click', () => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            video.currentTime = Math.min(video.duration, video.currentTime + 5);
-        }
+        if (!globalVideoState.video) return;
+        globalVideoState.video.currentTime = Math.min(globalVideoState.video.duration, globalVideoState.video.currentTime + 5);
+        console.log('⏩ Avance a:', globalVideoState.video.currentTime);
+        mostrarControlesVideo();
     });
 
+    // ✅ VOLUMEN
     btnVolumen.addEventListener('click', () => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            if (video.volume > 0) {
-                video.volume = 0;
-                btnVolumen.textContent = '🔇';
-                sliderVolumen.value = 0;
-            } else {
-                video.volume = sliderVolumen.value / 100;
-                btnVolumen.textContent = '🔊';
-            }
+        if (!globalVideoState.video) return;
+
+        if (globalVideoState.video.volume > 0) {
+            globalVideoState.video.volume = 0;
+            btnVolumen.textContent = '🔇';
+            sliderVolumen.value = 0;
+        } else {
+            globalVideoState.video.volume = sliderVolumen.value / 100;
+            btnVolumen.textContent = globalVideoState.video.volume < 0.5 ? '🔉' : '🔊';
         }
     });
 
+    // ✅ SLIDER VOLUMEN
     sliderVolumen.addEventListener('input', (e) => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            video.volume = e.target.value / 100;
-
-            if (video.volume === 0) {
-                btnVolumen.textContent = '🔇';
-            } else if (video.volume < 0.5) {
-                btnVolumen.textContent = '🔉';
-            } else {
-                btnVolumen.textContent = '🔊';
-            }
+        if (!globalVideoState.video) return;
+        globalVideoState.video.volume = e.target.value / 100;
+        if (globalVideoState.video.volume === 0) {
+            btnVolumen.textContent = '🔇';
+        } else if (globalVideoState.video.volume < 0.5) {
+            btnVolumen.textContent = '🔉';
+        } else {
+            btnVolumen.textContent = '🔊';
         }
     });
 
+    // ✅ PANTALLA COMPLETA
     btnPantallaCompleta.addEventListener('click', () => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            if (video.requestFullscreen) {
-                video.requestFullscreen().catch(err => console.error('Error:', err));
-            }
+        if (!globalVideoState.video) return;
+        if (globalVideoState.video.requestFullscreen) {
+            globalVideoState.video.requestFullscreen().catch(err => console.error('Error:', err));
         }
     });
 
+    // ✅ CERRAR CONTROLES
     btnCerrarControles.addEventListener('click', () => {
         ocultarControlesVideo();
     });
 
+    // ✅ VELOCIDAD
     selectVelocidad.addEventListener('change', (e) => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            video.playbackRate = parseFloat(e.target.value);
-        }
+        if (!globalVideoState.video) return;
+        globalVideoState.video.playbackRate = parseFloat(e.target.value);
     });
 
+    // ✅ BARRA DE PROGRESO
     progressBar.addEventListener('click', (e) => {
-        if (window.videoPlanes && window.videoPlanes.length > 0) {
-            const video = window.videoPlanes[0].video;
-            const rect = progressBar.getBoundingClientRect();
-            const porcentaje = (e.clientX - rect.left) / rect.width;
-            video.currentTime = porcentaje * video.duration;
-        }
+        if (!globalVideoState.video) return;
+        const rect = progressBar.getBoundingClientRect();
+        const porcentaje = (e.clientX - rect.left) / rect.width;
+        globalVideoState.video.currentTime = porcentaje * globalVideoState.video.duration;
     });
 
-    if (window.videoPlanes && window.videoPlanes.length > 0) {
-        const video = window.videoPlanes[0].video;
-        video.addEventListener('timeupdate', actualizarBarraProgreso);
-        video.addEventListener('loadedmetadata', () => {
-            document.getElementById('video-duracion-total').textContent = formatearTiempo(video.duration);
-        });
-    }
+    // ✅ ACTUALIZAR BARRA CONTINUAMENTE
+    setInterval(() => {
+        if (globalVideoState.video && globalVideoState.isPlaying) {
+            actualizarBarraProgreso();
+        }
+    }, 100);
 }
 
 function actualizarBarraProgreso() {
-    if (window.videoPlanes && window.videoPlanes.length > 0) {
-        const video = window.videoPlanes[0].video;
+    if (globalVideoState.video) {
         const progressFill = document.getElementById('video-progress-fill');
         const tiempoActual = document.getElementById('video-tiempo');
+        const duracionTotal = document.getElementById('video-duracion-total');
 
-        if (video.duration) {
-            const porcentaje = (video.currentTime / video.duration) * 100;
+        if (globalVideoState.video.duration) {
+            const porcentaje = (globalVideoState.video.currentTime / globalVideoState.video.duration) * 100;
             progressFill.style.width = porcentaje + '%';
-            tiempoActual.textContent = formatearTiempo(video.currentTime);
+            tiempoActual.textContent = formatearTiempo(globalVideoState.video.currentTime);
+            duracionTotal.textContent = formatearTiempo(globalVideoState.video.duration);
         }
     }
 }
@@ -1129,49 +1001,44 @@ function ocultarControlesVideo() {
     }
 }
 
-// ✅ ATAJOS DE TECLADO PARA VIDEO
+// ✅ ATAJOS DE TECLADO - Con booleano isPlaying
 document.addEventListener('keydown', (e) => {
-    if (!window.videoPlanes || window.videoPlanes.length === 0) return;
+    if (!globalVideoState.video) return;
 
-    const video = window.videoPlanes[0].video;
     const btnPlayPause = document.getElementById('btn-play-pause');
 
     switch (e.code) {
         case 'Space':
             e.preventDefault();
-            if (video.paused) {
-                video.play();
-                btnPlayPause.textContent = '⏸️';
-            } else {
-                video.pause();
-                btnPlayPause.textContent = '▶️';
-            }
+            const nuevoEstado = !globalVideoState.isPlaying;
+            actualizarEstadoGlobal(nuevoEstado);
+            btnPlayPause.textContent = nuevoEstado ? '⏸️' : '▶️';
             mostrarControlesVideo();
             break;
 
         case 'ArrowRight':
             e.preventDefault();
-            video.currentTime = Math.min(video.duration, video.currentTime + 5);
+            globalVideoState.video.currentTime = Math.min(globalVideoState.video.duration, globalVideoState.video.currentTime + 5);
             mostrarControlesVideo();
             break;
 
         case 'ArrowLeft':
             e.preventDefault();
-            video.currentTime = Math.max(0, video.currentTime - 5);
+            globalVideoState.video.currentTime = Math.max(0, globalVideoState.video.currentTime - 5);
             mostrarControlesVideo();
             break;
 
         case 'ArrowUp':
             e.preventDefault();
-            video.volume = Math.min(1, video.volume + 0.1);
-            document.getElementById('slider-volumen').value = video.volume * 100;
+            globalVideoState.video.volume = Math.min(1, globalVideoState.video.volume + 0.1);
+            document.getElementById('slider-volumen').value = globalVideoState.video.volume * 100;
             mostrarControlesVideo();
             break;
 
         case 'ArrowDown':
             e.preventDefault();
-            video.volume = Math.max(0, video.volume - 0.1);
-            document.getElementById('slider-volumen').value = video.volume * 100;
+            globalVideoState.video.volume = Math.max(0, globalVideoState.video.volume - 0.1);
+            document.getElementById('slider-volumen').value = globalVideoState.video.volume * 100;
             mostrarControlesVideo();
             break;
 
@@ -1184,48 +1051,22 @@ document.addEventListener('keydown', (e) => {
             e.preventDefault();
             ocultarControlesVideo();
             break;
-
-        case 'KeyM':
-            e.preventDefault();
-            document.getElementById('btn-volumen').click();
-            mostrarControlesVideo();
-            break;
     }
 });
 
-let timeoutControles;
-document.addEventListener('mousemove', () => {
-    if (videoControlsVisible) {
-        clearTimeout(timeoutControles);
-        timeoutControles = setTimeout(() => {
-            ocultarControlesVideo();
-        }, 3000);
-    }
-});
-
-// ✅ MONITOREO DE CONEXIÓN
 function configurarMonitorConexion() {
     window.addEventListener('offline', function () {
         console.error('🔴 SIN CONEXIÓN');
-        showModalMessage('⚠️ No hay conexión a Internet');
-        if (controls?.isLocked) controls.unlock();
+        if (!navigator.onLine) {
+            showModalMessage('⚠️ No hay conexión a Internet');
+        }
     });
 
     window.addEventListener('online', function () {
         console.log('🟢 CONECTADO');
-        showModalMessage('✅ Conexión restaurada');
     });
-
-    // Monitoreo cada 30 segundos
-    setInterval(() => {
-        fetch('data:text/plain,ping', { mode: 'no-cors' })
-            .catch(() => {
-                console.warn('⚠️ Conexión inestable');
-            });
-    }, 30000);
 }
 
-// ✅ INICIALIZAR CONTROLES DE VIDEO
 window.addEventListener('load', () => {
     crearControlesVideo();
     console.log('✅ Aplicación completamente cargada');

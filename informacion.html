@@ -87,14 +87,5 @@
       </div>
     </div>
   </div>
-
-  <script>
-    window.addEventListener('wheel', function(event) {
-      window.parent.postMessage({
-        type: 'iframe-scroll',
-        deltaY: event.deltaY
-      }, '*');
-    });
-  </script>
 </body>
 </html>
