@@ -87,16 +87,12 @@ function init() {
 
     const isMobile = CONFIG.isMobile;
 
-    if (isMobile) {
-        overlay.innerHTML = "<p class='text-xl'>Gira la pantalla para interactuar. Usa los botones para moverte.</p>";
-        overlay.style.display = "flex";
-        crearControlesMoviles();
-    } else {
+    
         overlay.innerHTML = "<p class='text-xl'>Haz clic para mover la cámara (W, A, S, D).</p>";
         overlay.addEventListener("click", () => {
             controls.lock();
         });
-    }
+    
 
     controls.addEventListener("lock", () => {
         overlay.style.display = "none";
